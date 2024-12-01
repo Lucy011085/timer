@@ -95,7 +95,7 @@
         }
 
         #error-message {
-            color: red;
+            color: white;
             margin-top: 10px;
             font-size: 1.2rem;
             display: none;
@@ -182,6 +182,7 @@
                     }
 
                     if (totalSeconds === 0) {
+                        // Ensure the full sound plays and continues until finished when the timer reaches 0
                         playFullSound(); // Play the full sound again when the timer reaches zero
                         pulseTimer(); // Trigger the pulse effect when time is up
                     }
