@@ -86,7 +86,7 @@
         }
 
         #error-message {
-            color: white;
+            color: red;
             margin-top: 10px;
             font-size: 1.2rem;
             display: none;
@@ -117,6 +117,7 @@
         let totalSeconds = 0;
         let isPaused = false;
         let soundDuration = 6; // 6 seconds duration
+        let soundPlayed = false; // Flag to track if the last sound has been played
 
         function updateDisplay() {
             const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
@@ -160,11 +161,13 @@
                     updateDisplay();
 
                     // Play the last 5 seconds of the sound when we're in the last 5 seconds of the timer
-                    if (totalSeconds <= 5 && totalSeconds > 0) {
-                        playSound(2, 7);  // Play the last 5 seconds of the sound (1 to 6 seconds)
+                    if (totalSeconds <= 5 && totalSeconds > 0 && !soundPlayed) {
+                        playSound(1, 6);  // Play the last 5 seconds of the sound (1 to 6 seconds)
+                        soundPlayed = true; // Flag that the sound has been played
                     }
+
                     if (totalSeconds === 0) {
-                        playSound(2, 7); // Play the last 5 seconds of sound again when the timer ends
+                        playSound(1, 6); // Play the last 5 seconds of sound again when the timer ends
                         pulseTimer(); // Trigger the pulse effect when time is up
                     }
 
@@ -196,6 +199,7 @@
             timer = null;
             totalSeconds = 0;
             isPaused = false;
+            soundPlayed = false; // Reset sound played flag when timer is stopped
             updateDisplay();
         }
     </script>
