@@ -121,7 +121,7 @@
     </div>
 
     <!-- Sound files -->
-    <audio id="timer-sound" src="https://lucy011085.github.io/timer/696048__musik-fan__up-to-the-top-of-the-hour-beep.wav"></audio>
+    <audio id="timer-sound" src="https://lucy011085.github.io/timer/696048__musik-fan__up-to-the-top-of-the-hour-beep.wav" loop></audio>
 
     <script>
         let timer;
@@ -129,6 +129,7 @@
         let isPaused = false;
         let soundPlayed = false; // Flag to track if the sound for the last 5 seconds is played
         let soundDuration = 6; // 6 seconds duration for the sound
+        const sound = document.getElementById('timer-sound');
 
         function updateDisplay() {
             const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
@@ -136,16 +137,18 @@
             document.getElementById('time-display').textContent = `${minutes}:${seconds}`;
         }
 
-        function playSound(start, end) {
-            const sound = document.getElementById('timer-sound');
-            sound.currentTime = start; // Start playing from the 'start' time (0-5 seconds)
+        function playSound() {
+            sound.currentTime = 0; // Start from the beginning each time
             sound.play();
+        }
 
-            // Stop the sound after the designated time
+        function playLast5SecondsSound() {
+            sound.currentTime = 0; // Start from the beginning
+            sound.play();
             setTimeout(() => {
                 sound.pause();
-                sound.currentTime = 0; // Reset sound to the beginning
-            }, (end - start) * 1000); // Duration is the difference between start and end
+                sound.currentTime = 0; // Reset the sound
+            }, 5000); // Play for 5 seconds
         }
 
         function startTimer() {
@@ -160,8 +163,8 @@
                 document.getElementById('error-message').style.display = 'none'; // Hide error message
             }
 
-            // Play the entire sound file immediately when the Start button is clicked
-            playSound(0, 6);
+            // Play the sound file immediately when the Start button is clicked
+            playSound();
 
             if (timer) return;
             if (!isPaused) {
@@ -173,14 +176,14 @@
                     totalSeconds--;
                     updateDisplay();
 
-                    // Play the first 5 seconds of the sound when there are 5 seconds remaining
-                    if (totalSeconds <= 5 && totalSeconds > 0 && !soundPlayed) {
-                        playSound(0, 5); // First 5 seconds of the sound (0 to 5)
-                        soundPlayed = true; // Flag that the last 5 seconds sound is played
+                    // Play the last 5 seconds sound when there are 5 seconds remaining
+                    if (totalSeconds === 5 && !soundPlayed) {
+                        playLast5SecondsSound(); // Play the last 5 seconds of the sound
+                        soundPlayed = true;
                     }
 
                     if (totalSeconds === 0) {
-                        playSound(1, 6); // Play the last part of the sound (last second)
+                        playSound(); // Play the full sound when time hits zero
                         pulseTimer(); // Trigger the pulse effect when time is up
                     }
 
@@ -205,6 +208,7 @@
             clearInterval(timer);
             timer = null;
             isPaused = true;
+            sound.pause(); // Stop the sound when the timer is paused
         }
 
         function stopTimer() {
@@ -214,6 +218,8 @@
             isPaused = false;
             soundPlayed = false; // Reset sound played flag when timer is stopped
             updateDisplay();
+            sound.pause(); // Stop the sound when the timer is stopped
+            sound.currentTime = 0; // Reset sound to the beginning
         }
     </script>
 </body>
