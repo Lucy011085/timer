@@ -66,14 +66,14 @@
             }
         }
 
-        /* Pulse effect for timer when time is up */
+        /* Slower pulse effect */
         @keyframes pulse {
             0% {
                 transform: scale(1);
                 opacity: 1;
             }
             50% {
-                transform: scale(1.2);
+                transform: scale(1.05);
                 opacity: 0.8;
             }
             100% {
@@ -82,7 +82,14 @@
             }
         }
         .pulse {
-            animation: pulse 0.5s ease-in-out infinite;
+            animation: pulse 1s ease-in-out infinite; /* Slower pulse duration */
+        }
+
+        #error-message {
+            color: red;
+            margin-top: 10px;
+            font-size: 1.2rem;
+            display: none;
         }
     </style>
 </head>
@@ -99,17 +106,17 @@
             <button onclick="pauseTimer()">Pause</button>
             <button onclick="stopTimer()">Stop</button>
         </div>
+        <div id="error-message">Please set your timer</div>
     </div>
 
     <!-- Sound files -->
-    <audio id="short-sound" src="https://www.soundjay.com/button/beep-07.wav"></audio>
-    <audio id="long-sound" src="https://www.soundjay.com/button/beep-10.wav"></audio>
-    <audio id="start-sound" src="https://www.soundjay.com/button/beep-06.wav"></audio>
+    <audio id="timer-sound" src="https://lucy011085.github.io/timer/696048__musik-fan__up-to-the-top-of-the-hour-beep.wav"></audio>
 
     <script>
         let timer;
         let totalSeconds = 0;
         let isPaused = false;
+        let soundDuration = 6; // 6 seconds duration
 
         function updateDisplay() {
             const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
@@ -117,19 +124,33 @@
             document.getElementById('time-display').textContent = `${minutes}:${seconds}`;
         }
 
-        function playSound(soundType) {
-            const sound = document.getElementById(soundType);
+        function playSound(start, end) {
+            const sound = document.getElementById('timer-sound');
+            sound.currentTime = start; // Start playing from the 'start' time (0-5 seconds)
             sound.play();
+            
+            setTimeout(() => {
+                sound.pause();  // Stop the sound after the designated time
+            }, (end - start) * 1000); // Duration is the difference between start and end
         }
 
         function startTimer() {
-            // Play the sound when the Start button is pressed
-            playSound("start-sound");
+            // Check if the time has been set
+            const minutes = parseInt(document.getElementById('set-minutes').value) || 0;
+            const seconds = parseInt(document.getElementById('set-seconds').value) || 0;
+
+            if (minutes === 0 && seconds === 0) {
+                document.getElementById('error-message').style.display = 'block'; // Show error message
+                return; // Don't start the timer if no time is set
+            } else {
+                document.getElementById('error-message').style.display = 'none'; // Hide error message
+            }
+
+            // Play the first second of the timer sound immediately when the Start button is clicked
+            playSound(0, 1);
 
             if (timer) return;
             if (!isPaused) {
-                const minutes = parseInt(document.getElementById('set-minutes').value) || 0;
-                const seconds = parseInt(document.getElementById('set-seconds').value) || 0;
                 totalSeconds = minutes * 60 + seconds;
             }
             isPaused = false;
@@ -138,12 +159,12 @@
                     totalSeconds--;
                     updateDisplay();
 
-                    // Play sounds in the last 5 seconds
+                    // Play the last 5 seconds of the sound when we're in the last 5 seconds of the timer
                     if (totalSeconds <= 5 && totalSeconds > 0) {
-                        playSound("short-sound");
+                        playSound(1, 6);  // Play the last 5 seconds of the sound (1 to 6 seconds)
                     }
                     if (totalSeconds === 0) {
-                        playSound("long-sound"); // Play the longer sound when the timer ends
+                        playSound(1, 6); // Play the last 5 seconds of sound again when the timer ends
                         pulseTimer(); // Trigger the pulse effect when time is up
                     }
 
