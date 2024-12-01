@@ -3,31 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Custom Timer</title>
+    <title>Let's Get Started!</title>
     <style>
         body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
             font-family: Arial, sans-serif;
+            color: white;
+            background: url('https://images.pexels.com/photos/20272497/pexels-photo-20272497.jpeg') no-repeat center center/cover;
+        }
+        .timer-container {
             text-align: center;
             padding: 20px;
         }
-        .timer-container {
-            margin: 20px auto;
-            max-width: 400px;
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+        }
+        #time-display {
+            font-size: 3rem;
+            margin: 20px 0;
         }
         input {
             width: 60px;
             text-align: center;
             font-size: 1.2rem;
+            margin: 0 5px;
+            border: none;
+            border-radius: 5px;
+            padding: 5px;
+        }
+        .buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
         }
         button {
-            margin: 10px;
+            background-color: white;
+            color: black;
+            border: none;
+            border-radius: 30px;
             padding: 10px 20px;
             font-size: 1rem;
+            margin: 5px;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
-        #time-display {
-            font-size: 2rem;
-            margin: 20px 0;
+        button:hover {
+            background-color: #f0f0f0;
+        }
+        @media (max-width: 600px) {
+            .buttons {
+                flex-direction: column;
+                align-items: center;
+            }
         }
     </style>
 </head>
@@ -38,11 +73,12 @@
         <input id="set-minutes" type="number" min="0" value="0">
         <label for="set-seconds">Seconds: </label>
         <input id="set-seconds" type="number" min="0" max="59" value="0">
-        <br>
-        <button onclick="startTimer()">Start</button>
-        <button onclick="pauseTimer()">Pause</button>
-        <button onclick="stopTimer()">Stop</button>
         <div id="time-display">00:00</div>
+        <div class="buttons">
+            <button onclick="startTimer()">Start</button>
+            <button onclick="pauseTimer()">Pause</button>
+            <button onclick="stopTimer()">Stop</button>
+        </div>
     </div>
 
     <script>
