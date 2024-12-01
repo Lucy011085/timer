@@ -81,6 +81,11 @@
         </div>
     </div>
 
+    <!-- Sound files -->
+    <audio id="short-sound" src="https://www.soundjay.com/button/beep-07.wav"></audio>
+    <audio id="long-sound" src="https://www.soundjay.com/button/beep-10.wav"></audio>
+    <audio id="start-sound" src="https://www.soundjay.com/button/beep-06.wav"></audio>
+
     <script>
         let timer;
         let totalSeconds = 0;
@@ -92,7 +97,15 @@
             document.getElementById('time-display').textContent = `${minutes}:${seconds}`;
         }
 
+        function playSound(soundType) {
+            const sound = document.getElementById(soundType);
+            sound.play();
+        }
+
         function startTimer() {
+            // Play the sound when the Start button is pressed
+            playSound("start-sound");
+
             if (timer) return;
             if (!isPaused) {
                 const minutes = parseInt(document.getElementById('set-minutes').value) || 0;
@@ -104,9 +117,18 @@
                 if (totalSeconds > 0) {
                     totalSeconds--;
                     updateDisplay();
+
+                    // Play sounds in the last 5 seconds
+                    if (totalSeconds <= 5 && totalSeconds > 0) {
+                        playSound("short-sound");
+                    }
+                    if (totalSeconds === 0) {
+                        playSound("long-sound"); // Play the longer sound when the timer ends
+                        alert("Time's up!");
+                    }
+
                 } else {
                     stopTimer();
-                    alert("Time's up!");
                 }
             }, 1000);
         }
