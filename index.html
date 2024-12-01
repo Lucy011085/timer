@@ -95,7 +95,7 @@
         }
 
         #error-message {
-            color: white;
+            color: red;
             margin-top: 10px;
             font-size: 1.2rem;
             display: none;
@@ -129,6 +129,7 @@
         let isPaused = false;
         let soundPlayed = false; // Flag to track if the sound for the last 5 seconds is played
         const sound = document.getElementById('timer-sound');
+        let isSoundPlaying = false;
 
         function updateDisplay() {
             const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
@@ -148,6 +149,7 @@
         function playFullSound() {
             sound.currentTime = 0; // Start at the beginning
             sound.play();
+            isSoundPlaying = true; // Track that the sound is playing
         }
 
         function startTimer() {
@@ -176,14 +178,15 @@
                     updateDisplay();
 
                     // Play the full 6-second sound when there are 5 seconds remaining
-                    if (totalSeconds === 5 && !soundPlayed) {
+                    if (totalSeconds === 5 && !isSoundPlaying) {
                         playFullSound(); // Play the full sound when there are 5 seconds remaining
-                        soundPlayed = true;
                     }
 
                     if (totalSeconds === 0) {
                         // Ensure the full sound plays and continues until finished when the timer reaches 0
-                        playFullSound(); // Play the full sound again when the timer reaches zero
+                        if (!isSoundPlaying) {
+                            playFullSound(); // Play the full sound again when the timer reaches zero
+                        }
                         pulseTimer(); // Trigger the pulse effect when time is up
                     }
 
@@ -209,6 +212,8 @@
             timer = null;
             isPaused = true;
             sound.pause(); // Stop the sound when the timer is paused
+            sound.currentTime = 0; // Reset sound to the beginning
+            isSoundPlaying = false; // Reset sound playing flag
         }
 
         function stopTimer() {
@@ -220,6 +225,7 @@
             updateDisplay();
             sound.pause(); // Stop the sound when the timer is stopped
             sound.currentTime = 0; // Reset sound to the beginning
+            isSoundPlaying = false; // Reset sound playing flag
         }
     </script>
 </body>
