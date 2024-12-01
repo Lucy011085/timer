@@ -95,7 +95,7 @@
         }
 
         #error-message {
-            color: white;
+            color: red;
             margin-top: 10px;
             font-size: 1.2rem;
             display: none;
@@ -148,10 +148,6 @@
         function playFullSound() {
             sound.currentTime = 0; // Start at the beginning
             sound.play();
-            setTimeout(() => {
-                sound.pause(); // Pause after the full 6 seconds
-                sound.currentTime = 0; // Reset the sound
-            }, 6000); // Play the full sound for 6 seconds
         }
 
         function startTimer() {
