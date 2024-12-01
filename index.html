@@ -30,11 +30,16 @@
             margin: 20px 0;
             transition: transform 0.3s ease-in-out;
         }
-        input {
+        .inputs-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .inputs-container input {
             width: 60px;
             text-align: center;
             font-size: 1.2rem;
-            margin: 0 5px;
             border: none;
             border-radius: 5px;
             padding: 5px;
@@ -60,6 +65,10 @@
             background-color: #f0f0f0;
         }
         @media (max-width: 600px) {
+            .inputs-container {
+                flex-direction: column;
+                align-items: center;
+            }
             .buttons {
                 flex-direction: column;
                 align-items: center;
@@ -86,7 +95,7 @@
         }
 
         #error-message {
-            color: white;
+            color: red;
             margin-top: 10px;
             font-size: 1.2rem;
             display: none;
@@ -96,10 +105,12 @@
 <body>
     <div class="timer-container">
         <h1>Let's Get Started!</h1>
-        <label for="set-minutes">Minutes: </label>
-        <input id="set-minutes" type="number" min="0" value="0">
-        <label for="set-seconds">Seconds: </label>
-        <input id="set-seconds" type="number" min="0" max="59" value="0">
+        <div class="inputs-container">
+            <label for="set-minutes">Minutes: </label>
+            <input id="set-minutes" type="number" min="0" value="0">
+            <label for="set-seconds">Seconds: </label>
+            <input id="set-seconds" type="number" min="0" max="59" value="0">
+        </div>
         <div id="time-display">00:00</div>
         <div class="buttons">
             <button onclick="startTimer()">Start</button>
@@ -116,8 +127,8 @@
         let timer;
         let totalSeconds = 0;
         let isPaused = false;
-        let soundDuration = 6; // 6 seconds duration
-        let soundPlayed = false; // Flag to track if the last sound has been played
+        let soundPlayed = false; // Flag to track if the sound for the last 5 seconds is played
+        let soundDuration = 6; // 6 seconds duration for the sound
 
         function updateDisplay() {
             const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
@@ -147,8 +158,8 @@
                 document.getElementById('error-message').style.display = 'none'; // Hide error message
             }
 
-            // Play the first second of the timer sound immediately when the Start button is clicked
-            playSound(0, 1);
+            // Play the entire sound file immediately when the Start button is clicked
+            playSound(0, 6);
 
             if (timer) return;
             if (!isPaused) {
@@ -160,14 +171,14 @@
                     totalSeconds--;
                     updateDisplay();
 
-                    // Play the last 5 seconds of the sound when we're in the last 5 seconds of the timer
+                    // Play the first 5 seconds of the sound when there are 5 seconds remaining
                     if (totalSeconds <= 5 && totalSeconds > 0 && !soundPlayed) {
-                        playSound(1, 6);  // Play the last 5 seconds of the sound (1 to 6 seconds)
-                        soundPlayed = true; // Flag that the sound has been played
+                        playSound(0, 5); // First 5 seconds of the sound (0 to 5)
+                        soundPlayed = true; // Flag that the last 5 seconds sound is played
                     }
 
                     if (totalSeconds === 0) {
-                        playSound(1, 6); // Play the last 5 seconds of sound again when the timer ends
+                        playSound(1, 6); // Play the last part of the sound (last second)
                         pulseTimer(); // Trigger the pulse effect when time is up
                     }
 
