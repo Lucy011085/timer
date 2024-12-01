@@ -140,9 +140,11 @@
             const sound = document.getElementById('timer-sound');
             sound.currentTime = start; // Start playing from the 'start' time (0-5 seconds)
             sound.play();
-            
+
+            // Stop the sound after the designated time
             setTimeout(() => {
-                sound.pause();  // Stop the sound after the designated time
+                sound.pause();
+                sound.currentTime = 0; // Reset sound to the beginning
             }, (end - start) * 1000); // Duration is the difference between start and end
         }
 
