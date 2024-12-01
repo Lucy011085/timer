@@ -86,7 +86,7 @@
         }
 
         #error-message {
-            color: red;
+            color: white;
             margin-top: 10px;
             font-size: 1.2rem;
             display: none;
@@ -161,10 +161,10 @@
 
                     // Play the last 5 seconds of the sound when we're in the last 5 seconds of the timer
                     if (totalSeconds <= 5 && totalSeconds > 0) {
-                        playSound(1, 6);  // Play the last 5 seconds of the sound (1 to 6 seconds)
+                        playSound(2, 7);  // Play the last 5 seconds of the sound (1 to 6 seconds)
                     }
                     if (totalSeconds === 0) {
-                        playSound(1, 6); // Play the last 5 seconds of sound again when the timer ends
+                        playSound(2, 7); // Play the last 5 seconds of sound again when the timer ends
                         pulseTimer(); // Trigger the pulse effect when time is up
                     }
 
