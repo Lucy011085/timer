@@ -14,7 +14,7 @@
             min-height: 100vh;
             font-family: Arial, sans-serif;
             color: white;
-            background: url('https://images.pexels.com/photos/20272497/pexels-photo-20272497.jpeg') no-repeat center center/cover;
+            background: url('https://images.pexels.com/photos/1574848/pexels-photo-1574848.jpeg') no-repeat center center/cover;
         }
         .timer-container {
             text-align: center;
@@ -28,6 +28,7 @@
         #time-display {
             font-size: 3rem;
             margin: 20px 0;
+            transition: transform 0.3s ease-in-out;
         }
         input {
             width: 60px;
@@ -63,6 +64,25 @@
                 flex-direction: column;
                 align-items: center;
             }
+        }
+
+        /* Pulse effect for timer when time is up */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        .pulse {
+            animation: pulse 0.5s ease-in-out infinite;
         }
     </style>
 </head>
@@ -124,13 +144,24 @@
                     }
                     if (totalSeconds === 0) {
                         playSound("long-sound"); // Play the longer sound when the timer ends
-                        alert("Time's up!");
+                        pulseTimer(); // Trigger the pulse effect when time is up
                     }
 
                 } else {
                     stopTimer();
                 }
             }, 1000);
+        }
+
+        function pulseTimer() {
+            // Apply the pulse effect to the time display
+            const timeDisplay = document.getElementById('time-display');
+            timeDisplay.classList.add('pulse');
+
+            // Optionally, stop the pulse effect after a certain period
+            setTimeout(() => {
+                timeDisplay.classList.remove('pulse');
+            }, 5000); // Pulse effect lasts for 5 seconds
         }
 
         function pauseTimer() {
